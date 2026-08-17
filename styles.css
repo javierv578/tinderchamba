@@ -1,0 +1,556 @@
+/* ==========================================================================
+   TINDERCHAMBA — styles.css
+   Dirección de diseño: fiel al lenguaje visual de Tinder (degradado flama
+   rosa-naranja, tarjetas blancas muy redondeadas, botones circulares
+   flotantes) con un guiño periodístico solo en el logo y en las etiquetas
+   de categoría de medio.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOKENS: paleta, tipografía, espaciado, sombras
+   -------------------------------------------------------------------------- */
+:root {
+  /* Degradado firma "flama" — de rosa a naranja, como el ícono de Tinder */
+  --gradient-flame: linear-gradient(135deg, #FD5068 0%, #FF7854 100%);
+
+  /* Paleta base */
+  --color-bg: #FFF9F7;
+  --color-card: #FFFFFF;
+  --color-text: #42474D;
+  --color-text-muted: #8A8F98;
+  --color-border: #F0E4E1;
+
+  /* Acciones de swipe (mismos colores que usa Tinder en sus íconos) */
+  --color-reject: #FA5B6B;
+  --color-like: #4CCC93;
+
+  /* Categorías de medio (banda superior de la tarjeta) */
+  --color-tv: #6C5CE7;
+  --color-digital: #00B4D8;
+  --color-radio: #F7B733;
+  --color-corporativo: #576574;
+  --color-deportivo: #4CCC93;
+  --color-agencia: #FD5068;
+
+  /* Tipografía */
+  --font-display: 'Fredoka', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  /* Espaciado y forma */
+  --radius-card: 24px;
+  --radius-chip: 999px;
+  --shadow-card: 0 20px 40px -12px rgba(253, 80, 104, 0.25);
+  --shadow-btn: 0 8px 20px rgba(66, 71, 77, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET Y BASE
+   -------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  background: none;
+}
+
+/* Foco visible para navegación por teclado */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #FF7854;
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   3. HEADER — logo + tagline
+   -------------------------------------------------------------------------- */
+.app-header {
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  padding: 28px 20px 12px;
+}
+
+.logo-mark {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.5px;
+}
+
+/* "chamba" lleva el degradado flama, como acento de marca */
+.logo-mark-accent {
+  background: var(--gradient-flame);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   4. LAYOUT DE VISTAS (form / swipe)
+   -------------------------------------------------------------------------- */
+#app {
+  width: 100%;
+  max-width: 480px;
+  flex: 1;
+  padding: 0 20px 32px;
+}
+
+.view {
+  display: none;
+}
+
+.view--active {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   5. FORMULARIO DE PERFIL
+   -------------------------------------------------------------------------- */
+.form-intro {
+  text-align: center;
+  margin: 12px 0 28px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-reject);
+  margin-bottom: 8px;
+}
+
+.form-intro h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-intro p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.form-group {
+  border: none;
+  margin-bottom: 24px;
+}
+
+.form-group legend {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+#experiencia {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: 16px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: var(--color-card);
+  appearance: none;
+}
+
+#experiencia:focus {
+  border-color: #FF7854;
+}
+
+/* Chips de checkbox: look "pill" redondeado, como los filtros de Tinder */
+.checkbox-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.checkbox-chip {
+  position: relative;
+}
+
+.checkbox-chip input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-chip span {
+  display: inline-block;
+  padding: 10px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-chip);
+  font-size: 0.85rem;
+  color: var(--color-text);
+  background: var(--color-card);
+  transition: all 0.15s ease;
+}
+
+.checkbox-chip input:checked + span {
+  background: var(--gradient-flame);
+  border-color: transparent;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.checkbox-chip:hover span {
+  border-color: #FF7854;
+}
+
+/* --------------------------------------------------------------------------
+   6. BOTONES GENERALES
+   -------------------------------------------------------------------------- */
+.btn {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 16px 24px;
+  border-radius: var(--radius-chip);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn--full {
+  width: 100%;
+}
+
+.btn--primary {
+  background: var(--gradient-flame);
+  color: #FFFFFF;
+  box-shadow: 0 10px 24px -6px rgba(253, 80, 104, 0.45);
+}
+
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -6px rgba(253, 80, 104, 0.55);
+}
+
+.btn--secondary {
+  background: var(--color-card);
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+}
+
+.btn--secondary:hover {
+  border-color: #FF7854;
+}
+
+/* --------------------------------------------------------------------------
+   7. VISTA SWIPE — contador y stack de tarjetas
+   -------------------------------------------------------------------------- */
+.swipe-meta {
+  text-align: center;
+  margin: 12px 0 16px;
+}
+
+#cards-remaining {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.card-stack {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   8. TARJETA DE OFERTA (.job-card)
+   Estructura esperada (generada por app.js):
+   .job-card
+     .job-card__band        (banda superior de color según tipoMedio)
+     .job-card__match        (badge de % de compatibilidad)
+     .job-card__body
+       .job-card__cargo
+       .job-card__empresa
+       .job-card__meta       (comuna · modalidad)
+       .job-card__sueldo
+       .job-card__requisitos (lista)
+   -------------------------------------------------------------------------- */
+.job-card {
+  position: absolute;
+  inset: 0;
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.job-card:active {
+  cursor: grabbing;
+}
+
+/* Solo la tarjeta de arriba del stack se ve activa; el resto queda detrás,
+   ligeramente escalada, como en el mazo de Tinder */
+.job-card[data-stack-pos="1"] {
+  transform: scale(0.96) translateY(10px);
+  z-index: 1;
+}
+
+.job-card[data-stack-pos="2"] {
+  transform: scale(0.92) translateY(20px);
+  z-index: 0;
+  opacity: 0.7;
+}
+
+/* Clases que app.js añade al soltar el swipe */
+.job-card.swiping-right {
+  transform: translateX(150%) rotate(20deg);
+  opacity: 0;
+}
+
+.job-card.swiping-left {
+  transform: translateX(-150%) rotate(-20deg);
+  opacity: 0;
+}
+
+.job-card__band {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  position: relative;
+}
+
+/* Colores de banda por tipo de medio — se asignan vía clase modificadora
+   que app.js calcula a partir de job.tipoMedio */
+.job-card__band--tv { background: var(--color-tv); }
+.job-card__band--digital { background: var(--color-digital); }
+.job-card__band--radio { background: var(--color-radio); }
+.job-card__band--corporativo { background: var(--color-corporativo); }
+.job-card__band--deportivo { background: var(--color-deportivo); }
+.job-card__band--agencia { background: var(--color-agencia); }
+
+.job-card__tipo-medio {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Badge circular de compatibilidad, sobre la banda, esquina superior derecha */
+.job-card__match {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: #FFFFFF;
+  border-radius: var(--radius-chip);
+  padding: 6px 14px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: var(--shadow-btn);
+}
+
+.job-card__match--alto { color: var(--color-like); }
+.job-card__match--medio { color: #F7B733; }
+.job-card__match--bajo { color: var(--color-text-muted); }
+
+.job-card__body {
+  padding: 20px 24px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.job-card__cargo {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.job-card__empresa {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #FF7854;
+}
+
+.job-card__meta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+
+.job-card__sueldo {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 12px;
+}
+
+.job-card__sueldo span {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.job-card__requisitos {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.job-card__requisitos li {
+  font-size: 0.82rem;
+  color: var(--color-text);
+  padding-left: 18px;
+  position: relative;
+}
+
+.job-card__requisitos li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gradient-flame);
+}
+
+/* --------------------------------------------------------------------------
+   9. BOTONES FLOTANTES DE SWIPE (X / ♥)
+   -------------------------------------------------------------------------- */
+.swipe-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  margin-top: 24px;
+}
+
+.swipe-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-card);
+  box-shadow: var(--shadow-btn);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  line-height: 1;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.swipe-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+.swipe-btn--reject {
+  color: var(--color-reject);
+}
+
+.swipe-btn--like {
+  color: var(--color-like);
+  width: 72px;
+  height: 72px;
+  font-size: 1.9rem;
+}
+
+/* --------------------------------------------------------------------------
+   10. EMPTY STATE — cuando no quedan ofertas
+   -------------------------------------------------------------------------- */
+.empty-state {
+  height: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 0 24px;
+}
+
+.empty-state-stamp {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #FFFFFF;
+  background: var(--gradient-flame);
+  padding: 6px 16px;
+  border-radius: var(--radius-chip);
+  margin-bottom: 8px;
+}
+
+.empty-state h2 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+}
+
+.empty-state p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  max-width: 320px;
+}
+
+.empty-state .btn {
+  margin-top: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   11. RESPONSIVE
+   -------------------------------------------------------------------------- */
+@media (max-width: 380px) {
+  .card-stack,
+  .empty-state {
+    height: 460px;
+  }
+
+  .job-card__cargo {
+    font-size: 1.15rem;
+  }
+}
+
+/* Respeta la preferencia de reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .job-card,
+  .btn,
+  .swipe-btn {
+    transition: none;
+  }
+}
