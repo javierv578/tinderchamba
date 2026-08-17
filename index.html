@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tinderchamba — Encuentra tu próxima pega periodística</title>
+  <meta name="description" content="Desliza y encuentra ofertas de trabajo para periodistas en la Región Metropolitana.">
+
+  <!-- Tipografías: display condensada (estilo titular de diario) + sans para lectura + mono para datos -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ======================================================= -->
+  <!-- HEADER: logo + tagline, visible en ambas vistas          -->
+  <!-- ======================================================= -->
+  <header class="app-header">
+    <div class="logo">
+      <span class="logo-mark">Tinder<span class="logo-mark-accent">chamba</span></span>
+    </div>
+    <p class="tagline">Desliza a la derecha por tu próxima pega</p>
+  </header>
+
+  <main id="app">
+
+    <!-- ======================================================= -->
+    <!-- VISTA 1: FORMULARIO DE PERFIL                            -->
+    <!-- Se muestra al entrar. Al enviar, se calcula el match     -->
+    <!-- y se pasa a la vista de swipe (#swipe-view).             -->
+    <!-- ======================================================= -->
+    <section id="form-view" class="view view--active">
+      <form id="profile-form" novalidate>
+
+        <div class="form-intro">
+          <span class="eyebrow">Antes de empezar</span>
+          <h1>Cuéntanos tu perfil profesional</h1>
+          <p>Con esto armamos tu porcentaje de compatibilidad con cada oferta.</p>
+        </div>
+
+        <!-- Años de experiencia -->
+        <fieldset class="form-group">
+          <legend>¿Cuántos años de experiencia tienes?</legend>
+          <select id="experiencia" name="experiencia" required>
+            <option value="" disabled selected>Selecciona un rango</option>
+            <option value="0">Recién egresado / Practicante</option>
+            <option value="1">1 año</option>
+            <option value="2">2 años</option>
+            <option value="3">3 años</option>
+            <option value="5">5 años</option>
+            <option value="8">8 años o más</option>
+            <option value="12">12 años o más</option>
+          </select>
+        </fieldset>
+
+        <!-- Áreas de interés -->
+        <fieldset class="form-group">
+          <legend>¿En qué áreas te interesa trabajar?</legend>
+          <div class="checkbox-grid" id="areas-grid">
+            <label class="checkbox-chip">
+              <input type="checkbox" name="areas" value="investigacion">
+              <span>Periodismo de investigación</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="areas" value="television">
+              <span>Televisión</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="areas" value="digital">
+              <span>Medios digitales</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="areas" value="corporativo">
+              <span>Corporativo / Comunicaciones</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="areas" value="deportivo">
+              <span>Periodismo deportivo</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="areas" value="radio">
+              <span>Radio</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Herramientas que maneja -->
+        <fieldset class="form-group">
+          <legend>¿Qué herramientas manejas?</legend>
+          <div class="checkbox-grid" id="herramientas-grid">
+            <label class="checkbox-chip">
+              <input type="checkbox" name="herramientas" value="redaccion-seo">
+              <span>Redacción SEO</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="herramientas" value="edicion-video">
+              <span>Edición de video</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="herramientas" value="adobe-premiere">
+              <span>Adobe Premiere</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="herramientas" value="photoshop">
+              <span>Photoshop</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="herramientas" value="wordpress">
+              <span>WordPress / CMS</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="herramientas" value="redes-sociales">
+              <span>Manejo de redes sociales</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="herramientas" value="camara">
+              <span>Cámara / Fotografía</span>
+            </label>
+            <label class="checkbox-chip">
+              <input type="checkbox" name="herramientas" value="locucion">
+              <span>Locución</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn btn--primary btn--full">
+          Buscar mi pega
+        </button>
+      </form>
+    </section>
+
+    <!-- ======================================================= -->
+    <!-- VISTA 2: SWIPE DE TARJETAS                               -->
+    <!-- Oculta al inicio. app.js la activa tras enviar el form.  -->
+    <!-- ======================================================= -->
+    <section id="swipe-view" class="view">
+
+      <div class="swipe-meta">
+        <span id="cards-remaining">0 ofertas</span>
+      </div>
+
+      <!-- Contenedor donde app.js inyecta las tarjetas dinámicamente -->
+      <div id="card-stack" class="card-stack" aria-live="polite">
+        <!-- Las tarjetas .job-card se generan por JS a partir de jobs.js -->
+      </div>
+
+      <!-- Pantalla de "no quedan más ofertas", oculta hasta que se vacíe el stack -->
+      <div id="empty-state" class="empty-state" hidden>
+        <span class="empty-state-stamp">Sin pega</span>
+        <h2>Revisaste todas las ofertas</h2>
+        <p>Vuelve a intentarlo más tarde o ajusta tu perfil para ver otras opciones.</p>
+        <button id="btn-restart" class="btn btn--secondary">Editar mi perfil</button>
+      </div>
+
+      <!-- Controles de swipe -->
+      <div class="swipe-controls">
+        <button id="btn-reject" class="swipe-btn swipe-btn--reject" aria-label="Rechazar oferta">
+          ✕
+        </button>
+        <button id="btn-like" class="swipe-btn swipe-btn--like" aria-label="Aplicar a la oferta">
+          ♥
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- jobs.js: base de datos local de ofertas laborales -->
+  <script src="jobs.js"></script>
+  <!-- app.js: formulario, algoritmo de match y lógica de swipe (próxima entrega) -->
+  <script src="app.js"></script>
+</body>
+</html>
