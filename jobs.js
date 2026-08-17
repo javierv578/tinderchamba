@@ -4,9 +4,11 @@
  * Base de datos local (simulada) de ofertas laborales para periodistas
  * en la Región Metropolitana de Chile.
  *
- * No requiere backend: este array vive en el cliente y es consumido
- * por app.js para calcular el porcentaje de compatibilidad con el
- * perfil que el usuario llena en el formulario.
+ * No requiere backend: este array vive en el cliente. Es consumido por:
+ *   - app.js    → calcula compatibilidad con el perfil y arma el swipe
+ *   - machs.js  → no lo necesita directamente (lee los matches ya
+ *                 guardados en localStorage), pero comparte la misma
+ *                 forma de objeto
  *
  * Estructura de cada oferta:
  * {
@@ -29,6 +31,14 @@
  *                         "redes-sociales" | "camara" | "locucion")
  *   requisitos:          array de strings, se listan tal cual en la tarjeta
  *   descripcion:         bajada corta del cargo (string)
+ *   url:                 enlace de postulación (string).
+ *                         Al ser datos simulados, no existe una vacante
+ *                         real específica que linkear: aquí apunta a una
+ *                         búsqueda de LinkedIn Jobs ya filtrada por cargo
+ *                         + empresa (el enlace funciona y lleva a
+ *                         resultados reales). Cuando conectes ofertas
+ *                         reales, reemplaza esto por la URL exacta de
+ *                         postulación de cada vacante.
  * }
  * ------------------------------------------------------------------
  */
@@ -50,7 +60,8 @@ const JOBS_DB = [
       "Experiencia cubriendo contingencia",
       "Manejo de fuentes políticas o policiales"
     ],
-    descripcion: "Cobertura de contingencia diaria para pauta de prensa y despachos en vivo."
+    descripcion: "Cobertura de contingencia diaria para pauta de prensa y despachos en vivo.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=periodista%20CNN%20Chile&location=Santiago%2C%20Chile"
   },
   {
     id: 2,
@@ -68,7 +79,8 @@ const JOBS_DB = [
       "Conocimientos de SEO periodístico",
       "Manejo de CMS propio"
     ],
-    descripcion: "Redacción y edición de notas para portal de alto tráfico, con foco en SEO."
+    descripcion: "Redacción y edición de notas para portal de alto tráfico, con foco en SEO.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=editor%20contenidos%20BioBioChile&location=Santiago%2C%20Chile"
   },
   {
     id: 3,
@@ -86,7 +98,8 @@ const JOBS_DB = [
       "Manejo de Ley de Transparencia",
       "Portafolio de investigaciones publicadas"
     ],
-    descripcion: "Desarrollo de reportajes de investigación sobre corrupción y poder."
+    descripcion: "Desarrollo de reportajes de investigación sobre corrupción y poder.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=periodista%20investigacion%20CIPER&location=Santiago%2C%20Chile"
   },
   {
     id: 4,
@@ -104,7 +117,8 @@ const JOBS_DB = [
       "Redacción de comunicados institucionales",
       "Relación con medios de prensa"
     ],
-    descripcion: "Gestión de comunicación interna y externa de la red de Metro."
+    descripcion: "Gestión de comunicación interna y externa de la red de Metro.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=comunicaciones%20Metro%20de%20Santiago&location=Santiago%2C%20Chile"
   },
   {
     id: 5,
@@ -122,7 +136,8 @@ const JOBS_DB = [
       "Experiencia en relato o comentario en vivo",
       "Disponibilidad para viajar"
     ],
-    descripcion: "Cobertura de torneos nacionales e internacionales, en cancha y estudio."
+    descripcion: "Cobertura de torneos nacionales e internacionales, en cancha y estudio.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=periodista%20deportivo%20TNT%20Sports&location=Santiago%2C%20Chile"
   },
   {
     id: 6,
@@ -140,7 +155,8 @@ const JOBS_DB = [
       "Manejo de equipos de terreno",
       "Disponibilidad de turnos incluyendo fines de semana"
     ],
-    descripcion: "Producción de notas para noticiario central y matinal."
+    descripcion: "Producción de notas para noticiario central y matinal.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=productor%20periodistico%20Canal%2013&location=Santiago%2C%20Chile"
   },
   {
     id: 7,
@@ -158,25 +174,27 @@ const JOBS_DB = [
       "Redacción de titulares optimizados",
       "Análisis de métricas de audiencia"
     ],
-    descripcion: "Gestión de redes sociales y adaptación de contenidos editoriales al formato digital."
+    descripcion: "Gestión de redes sociales y adaptación de contenidos editoriales al formato digital.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=community%20manager%20periodista%20La%20Tercera&location=Santiago%2C%20Chile"
   },
   {
     id: 8,
-    cargo: "Periodista de Prensa Institucional",
-    empresa: "Universidad de Chile",
-    tipoMedio: "Corporativo / Académico",
-    comuna: "Ñuñoa",
-    modalidad: "Presencial",
-    sueldoLiquido: 1000000,
-    experienciaMinima: 2,
-    areas: ["corporativo", "investigacion"],
-    herramientas: ["redaccion-seo", "wordpress"],
+    cargo: "Encargado(a) de Comunicaciones Corporativas",
+    empresa: "CCU",
+    tipoMedio: "Corporativo",
+    comuna: "Las Condes",
+    modalidad: "Híbrido",
+    sueldoLiquido: 1550000,
+    experienciaMinima: 4,
+    areas: ["corporativo"],
+    herramientas: ["redes-sociales", "redaccion-seo"],
     requisitos: [
-      "Redacción de noticias institucionales",
-      "Cobertura de actividades académicas",
-      "Manejo de sitio web institucional"
+      "Experiencia en comunicación interna y de marca",
+      "Redacción de contenidos corporativos y de sustentabilidad",
+      "Coordinación con agencias externas"
     ],
-    descripcion: "Cobertura informativa de la vida universitaria para el sitio institucional."
+    descripcion: "Comunicación interna y de marca corporativa para una compañía multinacional de bebidas.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=comunicaciones%20corporativas%20CCU&location=Santiago%2C%20Chile"
   },
   {
     id: 9,
@@ -194,7 +212,8 @@ const JOBS_DB = [
       "Redacción para formato radial",
       "Disponibilidad de turno mañana"
     ],
-    descripcion: "Lectura y redacción de pauta horaria para el informativo de radio."
+    descripcion: "Lectura y redacción de pauta horaria para el informativo de radio.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=locutor%20Radio%20Cooperativa&location=Santiago%2C%20Chile"
   },
   {
     id: 10,
@@ -212,7 +231,8 @@ const JOBS_DB = [
       "Entrega de material bajo plazos ajustados",
       "Movilización propia valorada"
     ],
-    descripcion: "Cobertura gráfica y audiovisual para distribución a medios clientes de la agencia."
+    descripcion: "Cobertura gráfica y audiovisual para distribución a medios clientes de la agencia.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=periodista%20audiovisual%20Agencia%20UNO&location=Santiago%2C%20Chile"
   },
   {
     id: 11,
@@ -230,7 +250,8 @@ const JOBS_DB = [
       "Manejo de vocerías y puntos de prensa",
       "Experiencia previa en el sector público"
     ],
-    descripcion: "Coordinación de la estrategia comunicacional y vocerías del ministerio."
+    descripcion: "Coordinación de la estrategia comunicacional y vocerías del ministerio.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=jefe%20de%20prensa%20Ministerio%20de%20Salud&location=Santiago%2C%20Chile"
   },
   {
     id: 12,
@@ -248,6 +269,26 @@ const JOBS_DB = [
       "Buena redacción y ortografía",
       "Disponibilidad para turno tarde"
     ],
-    descripcion: "Redacción de noticias de última hora para portal de alto tráfico."
+    descripcion: "Redacción de noticias de última hora para portal de alto tráfico.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=redactor%20web%20Emol&location=Santiago%2C%20Chile"
+  },
+  {
+    id: 13,
+    cargo: "Periodista de Prensa Institucional",
+    empresa: "Universidad de Chile",
+    tipoMedio: "Corporativo / Académico",
+    comuna: "Ñuñoa",
+    modalidad: "Presencial",
+    sueldoLiquido: 1000000,
+    experienciaMinima: 2,
+    areas: ["corporativo", "investigacion"],
+    herramientas: ["redaccion-seo", "wordpress"],
+    requisitos: [
+      "Redacción de noticias institucionales",
+      "Cobertura de actividades académicas",
+      "Manejo de sitio web institucional"
+    ],
+    descripcion: "Cobertura informativa de la vida universitaria para el sitio institucional.",
+    url: "https://www.linkedin.com/jobs/search/?keywords=periodista%20prensa%20Universidad%20de%20Chile&location=Santiago%2C%20Chile"
   }
 ];
