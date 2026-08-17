@@ -10,11 +10,56 @@
  *
  * Depende de JOBS_DB, definido en jobs.js (debe cargarse antes que
  * este archivo en index.html).
+ *
+ * La clave de localStorage donde se guardan los matches ("tinderchamba_matches")
+ * es la misma que lee machs.html/machs.js — es el puente entre ambas páginas.
  * ------------------------------------------------------------------
  */
 
 (function () {
   'use strict';
+
+  /* ------------------------------------------------------------------
+     LocalStorage: guardar matches
+     ------------------------------------------------------------------ */
+  const MATCHES_KEY = 'tinderchamba_matches';
+
+  function obtenerMatchesGuardados() {
+    try {
+      const raw = localStorage.getItem(MATCHES_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (error) {
+      console.error('No se pudo leer localStorage:', error);
+      return [];
+    }
+  }
+
+  function guardarMatch(job) {
+    const matches = obtenerMatchesGuardados();
+
+    // Evita duplicados si el usuario ya le dio match antes a esta oferta
+    const yaExiste = matches.some((m) => m.id === job.id);
+    if (yaExiste) return;
+
+    // Solo se guardan los campos que machs.html necesita mostrar
+    // (se descarta "compatibilidad", que es específico de esta sesión)
+    const {
+      id, cargo, empresa, tipoMedio, comuna, modalidad,
+      sueldoLiquido, requisitos, descripcion, url
+    } = job;
+
+    matches.push({
+      id, cargo, empresa, tipoMedio, comuna, modalidad,
+      sueldoLiquido, requisitos, descripcion, url,
+      fechaMatch: new Date().toISOString()
+    });
+
+    try {
+      localStorage.setItem(MATCHES_KEY, JSON.stringify(matches));
+    } catch (error) {
+      console.error('No se pudo guardar en localStorage:', error);
+    }
+  }
 
   /* ------------------------------------------------------------------
      Referencias al DOM
@@ -281,14 +326,29 @@
 
     topCard.classList.add(direccion === 'like' ? 'swiping-right' : 'swiping-left');
 
-    // Quita la oferta de la cola (aquí, en un producto real, "like"
-    // dispararía la postulación real a la oferta)
-    queue.shift();
+    // Saca la oferta de la cola antes de decidir qué hacer con ella
+    const job = queue.shift();
+
+    if (direccion === 'like') {
+      guardarMatch(job);
+      mostrarToastMatch(job);
+    }
 
     // Espera a que termine la animación de salida antes de re-renderizar
     setTimeout(() => {
       renderStack();
     }, 300);
+  }
+
+  /* Pequeño aviso visual de "¡Match!" al guardar en localStorage */
+  function mostrarToastMatch(job) {
+    const toast = document.createElement('div');
+    toast.className = 'match-toast';
+    toast.textContent = `¡Match con ${job.empresa}! Se guardó en Mis machs.`;
+    document.body.appendChild(toast);
+
+    // Se autodestruye después de la animación (ver styles.css)
+    setTimeout(() => toast.remove(), 2200);
   }
 
   btnLike.addEventListener('click', () => resolverSwipe('like'));

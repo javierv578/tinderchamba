@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis machs — Tinderchamba</title>
+  <meta name="description" content="Historial de ofertas laborales a las que diste match en Tinderchamba.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ======================================================= -->
+  <!-- HEADER: logo + link de vuelta al swipe                   -->
+  <!-- ======================================================= -->
+  <header class="app-header">
+    <div class="header-row">
+      <div class="logo">
+        <span class="logo-mark">Tinder<span class="logo-mark-accent">chamba</span></span>
+      </div>
+      <a href="index.html" class="nav-link nav-link--machs">
+        ← Buscar pega
+      </a>
+    </div>
+    <p class="tagline">Tus matches, guardados en este navegador</p>
+  </header>
+
+  <main id="machs-app">
+
+    <div class="form-intro">
+      <span class="eyebrow">Mis machs</span>
+      <h1>Ofertas a las que dijiste ♥</h1>
+      <p>Se guardan solo en este navegador (localStorage), nadie más las ve.</p>
+    </div>
+
+    <!-- Contenedor donde machs.js inyecta la lista de matches guardados -->
+    <div id="matches-list" class="matches-list" aria-live="polite">
+      <!-- Las tarjetas .match-card se generan por JS a partir de localStorage -->
+    </div>
+
+    <!-- Estado vacío: se muestra si no hay matches guardados todavía -->
+    <div id="matches-empty" class="empty-state" hidden>
+      <span class="empty-state-stamp">Sin machs aún</span>
+      <h2>Todavía no le das ♥ a ninguna oferta</h2>
+      <p>Vuelve al swipe y desliza a la derecha las que te interesen.</p>
+      <a href="index.html" class="btn btn--primary">Ir a buscar pega</a>
+    </div>
+
+  </main>
+
+  <!-- machs.js: lee localStorage y renderiza el historial -->
+  <script src="machs.js"></script>
+</body>
+</html>

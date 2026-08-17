@@ -89,6 +89,31 @@ select:focus-visible {
   padding: 28px 20px 12px;
 }
 
+/* Fila superior del header: logo a la izquierda, nav-link a la derecha */
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.nav-link {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-chip);
+  border: 2px solid var(--color-border);
+  transition: border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  border-color: #FF7854;
+}
+
 .logo-mark {
   font-family: var(--font-display);
   font-size: 2rem;
@@ -533,7 +558,101 @@ select:focus-visible {
 }
 
 /* --------------------------------------------------------------------------
-   11. RESPONSIVE
+   11. TOAST DE "¡MATCH!" (app.js lo crea/destruye en el DOM)
+   -------------------------------------------------------------------------- */
+.match-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  background: var(--gradient-flame);
+  color: #FFFFFF;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.85rem;
+  padding: 12px 22px;
+  border-radius: var(--radius-chip);
+  box-shadow: 0 12px 28px -8px rgba(253, 80, 104, 0.5);
+  z-index: 10;
+  animation: toast-in-out 2.2s ease forwards;
+  white-space: nowrap;
+}
+
+@keyframes toast-in-out {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(12px); }
+}
+
+/* --------------------------------------------------------------------------
+   12. PÁGINA MACHS.HTML — lista de tarjetas guardadas
+   -------------------------------------------------------------------------- */
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 24px;
+}
+
+.match-card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.match-card__band {
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.match-card__fecha {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.match-card__body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.match-card__actions {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-remove-match {
+  align-self: center;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  padding: 4px;
+}
+
+.btn-remove-match:hover {
+  color: var(--color-reject);
+}
+
+/* La vista de matches no usa el sistema de #app / .view, así que el
+   contenedor principal de machs.html se estiliza directo */
+#machs-app {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 20px 32px;
+}
+
+/* --------------------------------------------------------------------------
+   13. RESPONSIVE
    -------------------------------------------------------------------------- */
 @media (max-width: 380px) {
   .card-stack,
